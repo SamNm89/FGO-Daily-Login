@@ -22,11 +22,11 @@ def topLogin(data: list) -> None:
         messageBonus += "\n"
 
     jsonData = {
-        "content": None,
+        "content": "@gansixeneh",
         "embeds": [
             {
                 "title": "FGO Daily Bonus - " + main.fate_region,
-                "description": f"Scheluded Login Fate/Grand Order.\n\n{messageBonus}",
+                "description": f"Scheduled Login Fate/Grand Order.\n\n{messageBonus}",
                 "color": 563455,
                 "fields": [
                     {
@@ -106,11 +106,11 @@ def drawFP(servants, missions) -> None:
             message_mission += f"__{mission.message}__\n{mission.progressTo}/{mission.condition}\n"
 
     jsonData = {
-        "content": None,
+        "content": "@gansixeneh",
         "embeds": [
             {
                 "title": "FGO Daily Bonus - " + main.fate_region,
-                "description": f"Scheluded Friend Point Fate/Grand Order.\n\n{message_mission}",
+                "description": f"Scheduled Friend Point Fate/Grand Order.\n\n{message_mission}",
                 "color": 5750876,
                 "fields": [
                     {
