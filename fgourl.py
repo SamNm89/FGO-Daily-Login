@@ -19,7 +19,7 @@ data_server_folder_crc_ = 0
 server_addr_ = 'https://game.fate-go.jp'
 github_token_ = ''
 github_name_ = ''
-user_agent_ = 'Dalvik/2.1.0 (Linux; U; Android 11; Pixel 5 Build/RD1A.201105.003.A1)'
+user_agent_ = 'Dalvik/2.1.0 (Linux; U; Android 12; Infinix X6817 Build/SP1A.210812.016)'
 
 
 # ==== User Info ====
@@ -61,11 +61,8 @@ def get_folder_data(assetbundle):
 
 
 httpheader = {
-    'Accept-Encoding': 'gzip, identity',
-    'User-Agent': user_agent_,
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Connection': 'Keep-Alive, TE',
-    'TE': 'identity',
+    'user-agent': user_agent_,
+    'content-type': 'application/x-www-form-urlencoded',
 }
 
 

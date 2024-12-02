@@ -6,6 +6,9 @@ import fgourl
 import user
 import coloredlogs
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Enviroments Variables
 userIds = os.environ['userIds'].split(',')

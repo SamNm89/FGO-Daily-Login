@@ -26,6 +26,8 @@ class ParameterBuilder:
             ('lastAccessTime', str(mytime.GetTimeStamp())),
             ('userId', self.uid_),
             ('verCode', fgourl.ver_code_),
+            ('deviceInfo', 'INFINIX Infinix X6817 / Android OS 12 / API-31 (SP1A.210812.016/230215V1740)'),
+            ('country', '702'),
         ]
 
     def AddParameter(self, key: str, value: str):

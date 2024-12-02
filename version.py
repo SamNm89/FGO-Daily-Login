@@ -11,6 +11,7 @@ import time
 import json5
 import httpx
 import lxml.html
+from google_play_scraper import app
 
 PLAY_STORE_URL = {
     "NA": "https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en",
@@ -46,8 +47,15 @@ def get_play_store_ver(region: str):
     if region == "CN":
         return get_CN_android_version()
 
-    play_store_response = httpx.get(PLAY_STORE_URL[region], follow_redirects=True)
-    play_store_html = lxml.html.fromstring(play_store_response.text)
+    app_url = 'https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en'
+
+    # Extract the package name from the URL
+    package_name = app_url.split('id=')[-1]
+
+    # Fetch app details using the google-play-scraper library
+    app_details = app(package_name)
+
+    return app_details['version']
 
     for xpath in (PLAY_STORE_XPATH_1, PLAY_STORE_XPATH_2, PLAY_STORE_XPATH_3):
         try:
