@@ -15,96 +15,54 @@ def topLogin(data: list) -> None:
     nl = '\n'
 
     if bonus != "No Bonus":
-        messageBonus += f"__{bonus.message}__{nl}```{nl.join(bonus.items)}```"
+        messageBonus += f":gift: __**{bonus.message}**__{nl}```{nl.join(bonus.items)}```"
 
         if bonus.bonus_name is not None:
             messageBonus += (
-                f"{nl}__{bonus.bonus_name}__{nl}"
+                f"{nl}:confetti_ball: __**{bonus.bonus_name}**__\n"
                 f"{bonus.bonus_detail}{nl}```{nl.join(bonus.bonus_camp_items)}```"
             )
 
         messageBonus += "\n"
 
     jsonData = {
-        "content": "<@334992555957813249>",
+        "content": "@samnm89",  # :white_check_mark: your original mention stays here
         "embeds": [
             {
-                "title": f"🎁 FGO Daily Bonus – {main.fate_region}",
-                "description": f"Scheduled Login Rewards:\n\n{messageBonus}",
-                "color": 0x7289DA,
-                "fields": [
-                    {"name": "🎖️ Level", "value": f"**{rewards.level}**", "inline": True},
-                    {"name": "🎟️ Tickets", "value": f"**{rewards.ticket}**", "inline": True},
-                    {"name": "💎 Saint Quartz", "value": f"**{rewards.stone}**", "inline": True},
-                    {"name": "📅 Login Days", "value": f"**{login.login_days}**", "inline": True},
-                    {"name": "📆 Total Days", "value": f"**{login.total_days}**", "inline": True},
-                    {"name": "👥 Total FP", "value": f"**{login.total_fp}**", "inline": True},
-                    {"name": "➕ Friend Points", "value": f"**+{login.add_fp}**", "inline": True},
-                    {"name": "🔋 AP Max", "value": f"**{login.act_max}**", "inline": True}
-                ],
-                "thumbnail": {
-                    "url": "https://grandorder.wiki/images/thumb/3/3d/Icon_Item_Saint_Quartz.png/200px-Icon_Item_Saint_Quartz.png"
-                },
-                "footer": {
-                    "text": "FGO Daily Tracker",
-                    "icon_url": "https://i.imgur.com/LJMPpP8.png"
-                },
-                "timestamp": datetime.utcnow().isoformat()
-            }
-        ],
-        "attachments": []
-    }
-
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    requests.post(endpoint, json=jsonData, headers=headers)
-
-
-def drawFP(servants, missions) -> None:
-    endpoint = main.webhook_discord_url
-
-    message_mission = ""
-    message_servant = ""
-
-    if len(servants) > 0:
-        servants_atlas = requests.get(
-            f"https://api.atlasacademy.io/export/JP/basic_svt_lang_en.json"
-        ).json()
-
-        svt_dict = {svt["id"]: svt for svt in servants_atlas}
-
-        for servant in servants:
-            try:
-                svt = svt_dict[servant.objectId]
-                message_servant += f"`{svt['name']}` "
-            except KeyError:
-                message_servant += f"`Unknown ID: {servant.objectId}` "
-
-    if len(missions) > 0:
-        for mission in missions:
-            message_mission += f"__{mission.message}__\n**{mission.progressTo}/{mission.condition}**\n"
-
-    jsonData = {
-        "content": "<@334992555957813249>",
-        "embeds": [
-            {
-                "title": f"✨ FGO FP Gacha – {main.fate_region}",
-                "description": f"Friend Point Results:\n\n{message_mission or 'No mission updates.'}",
-                "color": 0xFF69B4,
+                "title": f":sunrise: FGO Daily Login — {main.fate_region}",
+                "description": f":date: **Scheduled Login Report** for Fate/Grand Order\n\n{messageBonus}",
+                "color": 0xFDCB58,
                 "fields": [
                     {
-                        "name": "🎰 Gacha Result",
-                        "value": message_servant or "*No servants summoned.*",
+                        "name": ":1234: Player Info",
+                        "value": f":military_medal: **Level**: {rewards.level}\n"
+                                 f":tickets: **Tickets**: {rewards.ticket}\n"
+                                 f":gem: **Saint Quartz**: {rewards.stone}",
                         "inline": False
+                    },
+                    {
+                        "name": ":clock3: Login Stats",
+                        "value": f":date: **Today**: {login.login_days}\n"
+                                 f":calendar: **Total**: {login.total_days}",
+                        "inline": True
+                    },
+                    {
+                        "name": ":busts_in_silhouette: Friend Points",
+                        "value": f":heavy_plus_sign: **+{login.add_fp}** today\n"
+                                 f":100: **Total**: {login.total_fp}",
+                        "inline": True
+                    },
+                    {
+                        "name": ":zap: AP Details",
+                        "value": f":battery: **Max AP**: {login.act_max}",
+                        "inline": True
                     }
                 ],
                 "thumbnail": {
-                    "url": "https://i.imgur.com/LJMPpP8.png"
+                    "url": "https://cdn.discordapp.com/emojis/1000505037967065109.webp"
                 },
                 "footer": {
-                    "text": "FGO Daily Tracker",
+                    "text": ":compass: FGO Daily Tracker Bot",
                     "icon_url": "https://i.imgur.com/LJMPpP8.png"
                 },
                 "timestamp": datetime.utcnow().isoformat()
