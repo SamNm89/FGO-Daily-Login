@@ -33,6 +33,10 @@ def topLogin(data: list) -> None:
                 "title": f":sunrise: FGO Daily Login — {main.fate_region}",
                 "description": f":date: **Scheduled Login Report** for Fate/Grand Order\n\n{messageBonus}",
                 "color": 0xFDCB58,
+                "author": {
+                    "name": "Sticker on the Left",  # You can keep a placeholder name if you want
+                    "icon_url": "https://cdn.discordapp.com/emojis/977346800111484990.webp"  # Your image here
+                },
                 "fields": [
                     {
                         "name": ":1234: Player Info",
@@ -61,9 +65,6 @@ def topLogin(data: list) -> None:
                 ],
                 "thumbnail": {
                     "url": "https://cdn.discordapp.com/emojis/979017022740516874.webp"
-                },
-                "image": {
-                    "url": "https://cdn.discordapp.com/emojis/977346800111484990.webp"
                 },
                 "footer": {
                     "text": "I love You",
