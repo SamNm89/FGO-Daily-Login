@@ -26,7 +26,7 @@ def topLogin(data: list) -> None:
         messageBonus += "\n"
 
     jsonData = {
-        "content": "@samnm89",  # :white_check_mark: your original mention stays here
+        "content": "<@217003486489870336>",  # :white_check_mark: your original mention stays here
         "embeds": [
             {
                 "title": f":sunrise: FGO Daily Login — {main.fate_region}",
