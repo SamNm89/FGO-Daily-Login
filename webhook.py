@@ -59,11 +59,11 @@ def topLogin(data: list) -> None:
                     }
                 ],
                 "thumbnail": {
-                    "url": "https://cdn.discordapp.com/emojis/1000505037967065109.webp"
+                    "url": "https://cdn.discordapp.com/emojis/979017022740516874.webp"
                 },
                 "footer": {
-                    "text": ":compass: FGO Daily Tracker Bot",
-                    "icon_url": "https://i.imgur.com/LJMPpP8.png"
+                    "text": "I love You",
+                    "icon_url": "https://cdn.discordapp.com/emojis/809521848416862218.webp"
                 },
                 "timestamp": datetime.utcnow().isoformat()
             }
