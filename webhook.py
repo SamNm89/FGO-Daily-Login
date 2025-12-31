@@ -158,3 +158,42 @@ def shop(item: str, quantity: str) -> None:
         requests.post(endpoint, json=jsonData, headers=headers)
     except Exception as e:
         print(f"Webhook error: {e}")
+
+
+def presents(items_claimed: list) -> None:
+    endpoint = main.webhook_discord_url
+    
+    # Format the list of items for the message
+    # items_claimed should be a list of strings like ["Saint Quartz x3", "Summon Ticket x1"]
+    formatted_items = "\n".join(items_claimed)
+
+    jsonData = {
+        "content": None,
+        "embeds": [
+            {
+                "title": f"Present Box - {main.fate_region}",
+                "description": "Items Claimed Successfully",
+                "color": 16768340, # Gold color
+                "fields": [
+                    {
+                        "name": "Claimed Items",
+                        "value": f"```{formatted_items}```",
+                        "inline": False
+                    }
+                ],
+                "thumbnail": {
+                    "url": "https://www.fate-go.jp/manga_fgo/images/commnet_chara02.png" 
+                }
+            }
+        ],
+        "attachments": []
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        requests.post(endpoint, json=jsonData, headers=headers)
+    except Exception as e:
+        print(f"Webhook error: {e}")

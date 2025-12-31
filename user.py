@@ -448,7 +448,10 @@ class user:
 
     def receive_presents(self):
         # Item IDs to claim: 1 = Saint Quartz, 4001 = Summon Ticket
-        target_item_ids = [1, 4001]
+        target_mapping = {
+            1: "Saint Quartz",
+            4001: "Summon Ticket"
+        }
         
         try:
             data = self.get_presents()
@@ -461,32 +464,28 @@ class user:
                  present_box = data['cache']['replaced'].get('userPresentBox', [])
 
             presents_to_receive = []
-            
+            claimed_items_report = []
+
             for present in present_box:
-                # Check directly if objectId matches our targets
-                if present.get('objectId') in target_item_ids:
+                obj_id = present.get('objectId')
+                if obj_id in target_mapping:
                     presents_to_receive.append(str(present['presentId']))
-                # Also check giftType just in case structure differs slightly, 
-                # but objectId is usually the item ID for standard gifts.
-                
+                    
+                    # Prepare report
+                    name = target_mapping[obj_id]
+                    num = present.get('num', 1)
+                    claimed_items_report.append(f"{name} x{num}")
+
             if not presents_to_receive:
                 main.logger.info("No Saint Quartz or Tickets found in Present Box.")
                 return
 
             main.logger.info(f"Found {len(presents_to_receive)} items to claim. Claiming...")
 
-            # API expects a comma-separated list or array? standard is usually recursive id list
-            # We will try sending it as a comma separated list or repeating parameter
-            # Based on standard recursive logic, it's often 'presentIds' as a list.
-            # user.Post/Builder handles parameters. 
-            
-            # For the 'receive' endpoint, usually it sends `presentIds` as a string "[id1,id2]" or comma separated
-            # Let's try JSON string format as that is common for array params in FGO
-            
             present_ids_str =  "[" + ",".join(presents_to_receive) + "]"
             
             self.builder_.AddParameter('presentIds', present_ids_str)
-            self.builder_.AddParameter('shopIdIndex', '1') # Sometimes required
+            self.builder_.AddParameter('shopIdIndex', '1')
             
             data = self.Post(f'{fgourl.server_addr_}/present/receive?_userId={self.user_id_}')
             
@@ -495,14 +494,13 @@ class user:
             
             for resp in responses:
                 if resp.get('resCode') == '00' and resp.get('nid') == 'presentReceive':
-                     success = resp.get('success', {})
-                     if 'success' in success: # Sometimes success is nested
-                        # Count claimed? The response usually lists what was claimed
-                        pass
                      success_count += 1
             
             if success_count > 0:
                 main.logger.info(f"Successfully claimed {len(presents_to_receive)} items.")
+                # Send webhook
+                if claimed_items_report:
+                    webhook.presents(claimed_items_report)
             else:
                  main.logger.info("Claim request sent, but no confirmation in primary response.")
 
