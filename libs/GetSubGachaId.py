@@ -9,9 +9,19 @@ def GetGachaSubIdFP(region):
     gachaList = json.loads(response.text)
     timeNow = GetTimeStamp()
     
+    priority = 0
+    goodGacha = None
+    
     for gacha in gachaList:
         openedAt = gacha["openedAt"]
         closedAt = gacha["closedAt"]
 
-        if openedAt <= timeNow & timeNow <= closedAt:
-            return str(gacha["id"])
+        if openedAt <= timeNow and timeNow <= closedAt:
+            p = int(gacha["priority"])
+            if p >= priority:
+                priority = p
+                goodGacha = gacha
+                
+    if goodGacha is not None:
+        return str(goodGacha["id"])
+    return "0"
