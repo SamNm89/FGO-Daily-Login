@@ -84,3 +84,73 @@ def topLogin(data: list) -> None:
         response.raise_for_status()
     except requests.RequestException as e:
         print(f"Failed to send webhook: {e}")
+
+
+def Present(name, namegift, object_id_count) -> None:
+    endpoint = main.webhook_discord_url
+    
+    jsonData = {
+        "content": None,
+        "embeds": [
+            {
+                "title": f"FGO Shop System - {main.fate_region}",
+                "description": "Exchange Successful",
+                "color": 8388736,
+                "fields": [
+                    {
+                        "name": f"{name}",
+                        "value": f"{namegift} x{object_id_count}",
+                        "inline": False
+                    }
+                ],
+                "thumbnail": {
+                    "url": "https://www.fate-go.jp/manga_fgo2/images/commnet_chara06.png"
+                }
+            }
+        ],
+        "attachments": []
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        requests.post(endpoint, json=jsonData, headers=headers)
+    except Exception as e:
+        print(f"Webhook error: {e}")
+
+
+def shop(item: str, quantity: str) -> None:
+    endpoint = main.webhook_discord_url
+    
+    jsonData = {
+        "content": None,
+        "embeds": [
+            {
+                "title": f"FGO Shop System - {main.fate_region}",
+                "description": "Purchase Successful",
+                "color": 5814783,
+                "fields": [
+                    {
+                        "name": f"Shop",
+                        "value": f"Spent {40 * int(quantity)} AP to buy {quantity}x {item}",
+                        "inline": False
+                    }
+                ],
+                "thumbnail": {
+                    "url": "https://www.fate-go.jp/manga_fgo2/images/commnet_chara10.png"
+                }
+            }
+        ],
+        "attachments": []
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        requests.post(endpoint, json=jsonData, headers=headers)
+    except Exception as e:
+        print(f"Webhook error: {e}")
