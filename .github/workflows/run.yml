@@ -31,3 +31,4 @@ jobs:
           authKeys: ${{ secrets.GAME_AUTHKEYS }}
           secretKeys: ${{ secrets.GAME_SECRETKEYS }}
           webhookDiscord: ${{ secrets.DISCORD_WEBHOOK }}
+          discordUserId: ${{ secrets.DISCORD_USERID }}

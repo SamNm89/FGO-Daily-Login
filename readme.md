@@ -36,6 +36,7 @@ Add this enviroment variables into `Repository > settings > secrets > actions`
 | GAME_SECRETKEYS | RaNdOmStRiNg1234:randomAAAAA=,RaNdOmStRiNg1235:randomAAAAA= |
 | GAME_USERIDS | 60951234,60951235 |
 | DISCORD_WEBHOOK | https://discord.com/api/webhooks/randomNumber/randomString |
+| DISCORD_USERID | (Optional) 217003486489870336 |
 
 # Road Map
 - [ ] Perform Daily Friend Point Summons

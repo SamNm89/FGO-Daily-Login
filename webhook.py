@@ -26,8 +26,12 @@ def topLogin(data: list) -> None:
 
         messageBonus += "\n"
 
+    content_ping = None
+    if main.discord_user_id:
+        content_ping = f"<@{main.discord_user_id}>"
+
     jsonData = {
-        "content": "<@217003486489870336>",
+        "content": content_ping,
         "embeds": [
             {
                 "title": f":sunrise: FGO Daily Login — {main.fate_region}",

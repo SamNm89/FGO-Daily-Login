@@ -16,6 +16,7 @@ authKeys = os.environ['authKeys'].split(',')
 secretKeys = os.environ['secretKeys'].split(',')
 fate_region = "NA"
 webhook_discord_url = os.environ['webhookDiscord']
+discord_user_id = os.environ.get('discordUserId')
 # UA = os.environ['UserAgent']
 
 # if UA != 'nullvalue':
