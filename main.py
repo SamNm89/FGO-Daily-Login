@@ -14,12 +14,12 @@ load_dotenv()
 userIds = os.environ['userIds'].split(',')
 authKeys = os.environ['authKeys'].split(',')
 secretKeys = os.environ['secretKeys'].split(',')
-fate_region = os.environ['fateRegion']
+fate_region = "NA"
 webhook_discord_url = os.environ['webhookDiscord']
-UA = os.environ['UserAgent']
+# UA = os.environ['UserAgent']
 
-if UA != 'nullvalue':
-    fgourl.user_agent_ = UA
+# if UA != 'nullvalue':
+#     fgourl.user_agent_ = UA
 
 userNums = len(userIds)
 authKeyNums = len(authKeys)
