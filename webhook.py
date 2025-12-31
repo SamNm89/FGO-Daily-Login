@@ -70,7 +70,7 @@ def topLogin(data: list) -> None:
                     "url": "https://cdn.discordapp.com/emojis/977346800111484990.webp"
                 },
                 "footer": {
-                    "text": "I love You",
+                    "text": "Gambare",
                     "icon_url": "https://cdn.discordapp.com/emojis/809521848416862218.webp"
                 },
                 "timestamp": datetime.utcnow().isoformat()
