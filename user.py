@@ -12,6 +12,8 @@ import requests
 from urllib.parse import quote_plus
 from libs.GetSubGachaId import GetGachaSubIdFP
 
+import msgpack
+
 class ParameterBuilder:
     def __init__(self, uid: str, auth_key: str, secret_key: str):
         self.uid_ = uid
@@ -482,9 +484,13 @@ class user:
 
             main.logger.info(f"Found {len(presents_to_receive)} items to claim. Claiming...")
 
-            present_ids_str =  "[" + ",".join(presents_to_receive) + "]"
+            presents_to_receive = [str(pid) for pid in presents_to_receive] # Ensure strings
+            msgpack_data = msgpack.packb(presents_to_receive)
+            base64_encoded_data = base64.b64encode(msgpack_data).decode()
             
-            self.builder_.AddParameter('presentIds', present_ids_str)
+            self.builder_.AddParameter('presentIds', base64_encoded_data)
+            self.builder_.AddParameter('itemSelectIdx', '0')
+            self.builder_.AddParameter('itemSelectNum', '0')
             self.builder_.AddParameter('shopIdIndex', '1')
             
             data = self.Post(f'{fgourl.server_addr_}/present/receive?_userId={self.user_id_}')
