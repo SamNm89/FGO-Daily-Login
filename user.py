@@ -264,93 +264,100 @@ class user:
             main.logger.error(f"Failed to fetch shop data: {e}")
             return None
 
-    def buyMonthlyTickets(self):
+    def buySummonTickets(self):
         shop_data = self.get_shop_data()
         if not shop_data:
             return
 
-        # Find the monthly summon ticket shop item
-        # Target ID 4001 (Summon Ticket), Flag 4096 (Monthly Shop?)
-        target_shop_id = None
-        limit_num = 0
-        price = 0
-        shop_name = "Summon Ticket (Monthly)"
-        
         current_time = mytime.GetTimeStamp()
+        active_tickets = []
 
         for item in shop_data:
-            if 4001 in item.get('targetIds', []) and item.get('flag') == 4096:
-                # Check for active shop item based on time
+            # Flag 4096: Monthly Shop, Flag 2048: Limited Time/Event Shop
+            if 4001 in item.get('targetIds', []) and item.get('flag') in [4096, 2048]:
                 opened_at = item.get('openedAt', 0)
                 closed_at = item.get('closedAt', 0)
                 
                 if opened_at <= current_time <= closed_at:
-                    target_shop_id = item.get('baseShopId')
-                    limit_num = item.get('limitNum')
-                    price = item.get('prices')[0]
-                    main.logger.info(f"Found active monthly ticket shop ID: {target_shop_id}")
-                    break
+                    active_tickets.append({
+                        'id': item.get('baseShopId'),
+                        'limit': item.get('limitNum'),
+                        'price': item.get('prices')[0],
+                        'flag': item.get('flag'),
+                        'name': item.get('name'),
+                        'detail': item.get('detail')
+                    })
 
-        if target_shop_id is None:
-            main.logger.info("Could not find active monthly ticket shop item.")
+        if not active_tickets:
+            main.logger.info("No active summon tickets found in shop.")
             return
+
+        # Sort by price (cheapest first)
+        active_tickets.sort(key=lambda x: x['price'])
 
         if not self.login_data:
             main.logger.error("Login data not found. Cannot proceed with purchase.")
             return
 
-        # Check user's current purchase status
-        current_num = 0
-        user_shop = self.login_data.get('cache', {}).get('updated', {}).get('userShop', [])
-        # Also check replaced just in case
-        if not user_shop:
-             user_shop = self.login_data.get('cache', {}).get('replaced', {}).get('userShop', [])
-
-        for item in user_shop:
-            if item.get('shopId') == target_shop_id:
-                current_num = item.get('num')
-                break
-        
-        purchasable_num = limit_num - current_num
-        if purchasable_num <= 0:
-            main.logger.info("Monthly tickets already purchased.")
-            return
-
-        # Check Mana Prisms
         user_game = self.login_data['cache']['replaced']['userGame'][0]
         mana = user_game.get('mana', 0)
-        
-        max_affordable = mana // price
-        if max_affordable == 0:
-            main.logger.info("Not enough Mana Prisms.")
-            return
 
-        to_buy = min(purchasable_num, max_affordable)
-
-        main.logger.info(f"Attempting to buy {to_buy} tickets...")
-
-        self.builder_.AddParameter('id', str(target_shop_id))
-        self.builder_.AddParameter('num', str(to_buy))
-        
-        try:
-            data = self.Post(f'{fgourl.server_addr_}/shop/purchase?_userId={self.user_id_}')
-            responses = data['response']
+        for ticket in active_tickets:
+            target_shop_id = ticket['id']
+            limit_num = ticket['limit']
+            price = ticket['price']
+            shop_label = "Monthly" if ticket['flag'] == 4096 else "Limited Time"
             
-            # Check for success
-            success = False
-            for resp in responses:
-                if resp.get('resCode') == '00' and resp.get('nid') == 'purchase':
-                    success = True
+            # Check user's current purchase status
+            current_num = 0
+            user_shop = self.login_data.get('cache', {}).get('updated', {}).get('userShop', [])
+            if not user_shop:
+                 user_shop = self.login_data.get('cache', {}).get('replaced', {}).get('userShop', [])
+
+            for item in user_shop:
+                if item.get('shopId') == target_shop_id:
+                    current_num = item.get('num')
                     break
             
-            if success:
-                main.logger.info(f"Successfully bought {to_buy} tickets.")
-                webhook.Present("Summon Ticket", "Summon Ticket (Monthly)", to_buy)
-            else:
-                main.logger.error("Purchase failed (API response).")
+            purchasable_num = limit_num - current_num
+            if purchasable_num <= 0:
+                main.logger.info(f"{shop_label} tickets already purchased (ID: {target_shop_id}).")
+                continue
 
-        except Exception as e:
-            main.logger.error(f"Purchase failed: {e}")
+            max_affordable = mana // price
+            if max_affordable == 0:
+                main.logger.info(f"Not enough Mana Prisms to buy {shop_label} tickets.")
+                continue
+
+            to_buy = min(purchasable_num, max_affordable)
+            main.logger.info(f"Attempting to buy {to_buy} {shop_label} tickets (ID: {target_shop_id})...")
+
+            self.builder_.AddParameter('id', str(target_shop_id))
+            self.builder_.AddParameter('num', str(to_buy))
+            
+            try:
+                data = self.Post(f'{fgourl.server_addr_}/shop/purchase?_userId={self.user_id_}')
+                responses = data['response']
+                
+                success = False
+                for resp in responses:
+                    if resp.get('resCode') == '00' and resp.get('nid') == 'purchase':
+                        success = True
+                        break
+                
+                if success:
+                    main.logger.info(f"Successfully bought {to_buy} {shop_label} tickets.")
+                    webhook.Present("Summon Ticket", f"Summon Ticket ({shop_label})", to_buy)
+                    # Update mana for next possible purchase in the loop
+                    mana -= (to_buy * price)
+                    # Also update login_data so subsequent checks in the loop are semi-accurate
+                    # (Though we'd need to update user_shop too for full accuracy, 
+                    # but usually there's only one active of each type)
+                else:
+                    main.logger.error(f"Purchase failed for {shop_label} tickets.")
+
+            except Exception as e:
+                main.logger.error(f"Purchase failed for {shop_label} tickets: {e}")
 
     def buyBlueApple(self):
         if not self.login_data:
