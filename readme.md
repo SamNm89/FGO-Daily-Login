@@ -39,8 +39,8 @@ Add this enviroment variables into `Repository > settings > secrets > actions`
 | DISCORD_USERID | (Optional) 217003486489870336 |
 
 # Road Map
-- [ ] Perform Daily Friend Point Summons
-- [ ] Claim all Saint Quartz and Tickets from gif box
+- [x] Perform Daily Friend Point Summons
+- [x] Claim all Saint Quartz and Tickets from gif box
 - [x] Buy monthly summon tickets
 - [x] Make blue apple automatic
 
