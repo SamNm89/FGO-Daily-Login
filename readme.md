@@ -17,10 +17,10 @@ It's simple, all you need to do is navigate to the following path and get the fo
 
 # Decript your data
 Be careful with this data, you should not pass this data to other person, this is private data.
-
-1. Open the file with notopad or text editor and copy from **ZSv** to end!
-2. Go to [Compiler Online](https://dotnetfiddle.net/ug7C0x) and paste the string
-3. You will get all necesary data to fill Secrets
+Compiler Online
+1. Open the website [FGO-Key-Decrypter](https://samnm89.github.io/FGO-Key-Decrypter-Web/)
+2. Drag your file into the website
+3. You will get all necessary data to fill Secrets
 
 # Discord Webhook 
 To create webhook discord you need create a server in discord and create a text channel, in settings of that channel search
